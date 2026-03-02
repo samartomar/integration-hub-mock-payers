@@ -1,6 +1,9 @@
 import { auth } from "express-oauth2-jwt-bearer";
 import {
+  applyVendorMap,
+  extractLhcode,
   parseVendorClaimsFromEnv,
+  parseVendorMapFromEnv,
   resolveVendorIdentity
 } from "./auth/vendorIdentity.js";
 
@@ -8,6 +11,7 @@ const issuer = process.env.JWT_ISSUER || process.env.AUTH0_ISSUER;
 const audience = process.env.JWT_AUDIENCE || process.env.AUTH0_AUDIENCE;
 const vendorClaim = process.env.VENDOR_CLAIM || "https://gosam.info/vendor_code";
 const configuredVendorClaims = parseVendorClaimsFromEnv();
+const vendorMap = parseVendorMapFromEnv();
 
 if (!issuer || !audience) {
   console.warn(
@@ -23,7 +27,7 @@ export const requireAuth = auth({
 
 export function attachVendorCode(req, res, next) {
   try {
-    const claims = req.auth || {};
+    const claims = req.auth?.payload || req.auth || {};
     const { vendorValue, inferredLhcode } = resolveVendorIdentity(
       claims,
       configuredVendorClaims
@@ -33,8 +37,11 @@ export function attachVendorCode(req, res, next) {
       claims.vendor_code || claims[vendorClaim] || ""
     ).trim();
     const existingLhcode = String(claims.lhcode || "").trim();
-    const resolvedVendorCode = existingVendorCode || vendorValue;
-    const resolvedLhcode = existingLhcode || inferredLhcode || vendorValue;
+    const unresolvedVendorCode = existingVendorCode || vendorValue;
+    const resolvedVendorCode = applyVendorMap(unresolvedVendorCode, vendorMap);
+    const mappedLhcode = extractLhcode(resolvedVendorCode);
+    const resolvedLhcode =
+      existingLhcode || inferredLhcode || mappedLhcode || resolvedVendorCode;
 
     if (!resolvedVendorCode) {
       return res.status(403).json({
@@ -46,7 +53,7 @@ export function attachVendorCode(req, res, next) {
     // Attach normalized identity to request auth context to mirror Python authorizer output.
     req.auth.vendorCode = resolvedVendorCode;
     req.auth.lhcode = resolvedLhcode;
-    req.auth.vendor_code = existingVendorCode || vendorValue;
+    req.auth.vendor_code = resolvedVendorCode;
     req.vendorCode = resolvedVendorCode;
 
     // For JWT-authenticated requests, source vendor must come from token, not body.

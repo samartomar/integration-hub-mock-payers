@@ -68,7 +68,7 @@ test("JWT vendor overrides conflicting body sourceVendor", async () => {
   process.env.IDP_VENDOR_CLAIMS = "lhcode,name,sub,entityId";
   process.env.VENDOR_CLAIM = "https://gosam.info/vendor_code";
 
-  const { attachVendorCode } = await import("../src/auth.js");
+  const { attachVendorCode } = await import(`../src/auth.js?t=${Date.now()}`);
 
   const req = {
     auth: {
@@ -100,4 +100,42 @@ test("JWT vendor overrides conflicting body sourceVendor", async () => {
   assert.equal(req.auth.lhcode, "LH002");
   assert.equal(req.body.sourceVendor, "LH002");
   assert.equal(req.body.sourceVendorCode, "LH002");
+});
+
+test("JWT vendor map remaps subject-derived identity to lhcode", async () => {
+  process.env.JWT_ISSUER = "https://integrator-8163795.okta.com/oauth2/default";
+  process.env.JWT_AUDIENCE = "api://default";
+  process.env.IDP_VENDOR_CLAIMS = "lhcode,name,sub,entityId";
+  process.env.JWT_VENDOR_MAP =
+    "02.partner@partners.com:LH002,01.partner@partners.com:LH001";
+
+  const { attachVendorCode } = await import(`../src/auth.js?t=${Date.now()}`);
+
+  const req = {
+    auth: {
+      payload: {
+        sub: "02.partner@partners.com"
+      }
+    },
+    body: {}
+  };
+
+  let nextCalled = false;
+  const res = {
+    status() {
+      return this;
+    },
+    json() {
+      return this;
+    }
+  };
+
+  attachVendorCode(req, res, () => {
+    nextCalled = true;
+  });
+
+  assert.equal(nextCalled, true);
+  assert.equal(req.auth.vendorCode, "LH002");
+  assert.equal(req.auth.vendor_code, "LH002");
+  assert.equal(req.auth.lhcode, "LH002");
 });

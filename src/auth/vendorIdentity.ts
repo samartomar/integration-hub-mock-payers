@@ -9,6 +9,10 @@ const FALLBACK_CANDIDATES = [
   "sub"
 ];
 
+function normalizeMapKey(value: string): string {
+  return String(value || "").trim().toLowerCase();
+}
+
 function normalizeClaimList(value: string): string[] {
   return String(value || "")
     .split(",")
@@ -85,4 +89,37 @@ export function resolveVendorIdentity(
     vendorValue,
     inferredLhcode
   };
+}
+
+export function parseVendorMapFromEnv(): Map<string, string> {
+  const map = new Map<string, string>();
+  const raw = process.env.JWT_VENDOR_MAP || "";
+  for (const entry of raw.split(",")) {
+    const item = entry.trim();
+    if (!item) {
+      continue;
+    }
+    const parts = item.split(":");
+    if (parts.length !== 2) {
+      continue;
+    }
+    const from = normalizeMapKey(parts[0]);
+    const to = String(parts[1] || "").trim();
+    if (from && to) {
+      map.set(from, to);
+    }
+  }
+  return map;
+}
+
+export function applyVendorMap(
+  value: string,
+  vendorMap: Map<string, string>
+): string {
+  const current = String(value || "").trim();
+  if (!current) {
+    return "";
+  }
+  const mapped = vendorMap.get(normalizeMapKey(current));
+  return mapped || current;
 }

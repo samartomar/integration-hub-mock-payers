@@ -17,11 +17,12 @@ router.get("/health", (req, res) => {
 });
 
 router.get("/api/whoami", (req, res) => {
+  const subject = req.auth?.payload?.sub || req.auth?.sub || null;
   return res.json({
     vendorCode: req.auth?.vendorCode || null,
     vendor_code: req.auth?.vendor_code || null,
     lhcode: req.auth?.lhcode || null,
-    subject: req.auth?.sub || null
+    subject
   });
 });
 

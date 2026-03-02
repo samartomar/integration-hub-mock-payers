@@ -139,3 +139,24 @@ test("JWT vendor map remaps subject-derived identity to lhcode", async () => {
   assert.equal(req.auth.vendor_code, "LH002");
   assert.equal(req.auth.lhcode, "LH002");
 });
+
+test("auth bypass injects synthetic JWT identity", async () => {
+  process.env.AUTH_BYPASS_ENABLED = "true";
+  process.env.AUTH_BYPASS_VENDOR_CODE = "LH023";
+  process.env.AUTH_BYPASS_SUBJECT = "bypass|LH023";
+  process.env.VENDOR_CLAIM = "https://gosam.info/vendor_code";
+
+  const { maybeBypassAuth } = await import(`../src/auth.js?t=${Date.now()}`);
+
+  const req = {};
+  let nextCalled = false;
+  maybeBypassAuth(req, {}, () => {
+    nextCalled = true;
+  });
+
+  assert.equal(nextCalled, true);
+  assert.equal(req.auth.payload.vendor_code, "LH023");
+  assert.equal(req.auth.payload.lhcode, "LH023");
+  assert.equal(req.auth.payload.sub, "bypass|LH023");
+  assert.equal(req.auth.payload["https://gosam.info/vendor_code"], "LH023");
+});

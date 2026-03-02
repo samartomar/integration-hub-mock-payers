@@ -1,7 +1,12 @@
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
-import { attachVendorCode, requireAuth } from "./src/auth.js";
+import {
+  attachVendorCode,
+  isAuthBypassEnabled,
+  maybeBypassAuth,
+  requireAuth
+} from "./src/auth.js";
 import routes from "./src/routes.js";
 
 const app = express();
@@ -16,8 +21,13 @@ app.get("/healthz", (_req, res) => {
   return res.json({ status: "ok", service: "integration-hub-mock-payers" });
 });
 
-// Protected API endpoints require a valid JWT and vendor claim.
-app.use(requireAuth, attachVendorCode, routes);
+// Protected API endpoints require JWT by default; optional bypass can be enabled for demos.
+if (isAuthBypassEnabled()) {
+  console.warn("[mock-payers] AUTH_BYPASS_ENABLED=true. JWT validation is bypassed.");
+  app.use(maybeBypassAuth, attachVendorCode, routes);
+} else {
+  app.use(requireAuth, attachVendorCode, routes);
+}
 
 app.listen(port, () => {
   console.log(`[mock-payers] listening on port ${port}`);

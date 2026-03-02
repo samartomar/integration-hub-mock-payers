@@ -12,6 +12,13 @@ const audience = process.env.JWT_AUDIENCE || process.env.AUTH0_AUDIENCE;
 const vendorClaim = process.env.VENDOR_CLAIM || "https://gosam.info/vendor_code";
 const configuredVendorClaims = parseVendorClaimsFromEnv();
 const vendorMap = parseVendorMapFromEnv();
+const bypassEnabled = String(process.env.AUTH_BYPASS_ENABLED || "")
+  .trim()
+  .toLowerCase() === "true";
+const bypassVendorCode = String(process.env.AUTH_BYPASS_VENDOR_CODE || "LH001").trim();
+const bypassSubject = String(
+  process.env.AUTH_BYPASS_SUBJECT || `bypass|${bypassVendorCode}`
+).trim();
 
 if (!issuer || !audience) {
   console.warn(
@@ -19,11 +26,44 @@ if (!issuer || !audience) {
   );
 }
 
-export const requireAuth = auth({
-  issuerBaseURL: issuer,
-  audience,
-  tokenSigningAlg: "RS256"
-});
+const strictAuthMiddleware =
+  issuer && audience
+    ? auth({
+        issuerBaseURL: issuer,
+        audience,
+        tokenSigningAlg: "RS256"
+      })
+    : (_req, res) => {
+        return res.status(500).json({
+          error: "SERVER_MISCONFIGURED",
+          message: "JWT_ISSUER/JWT_AUDIENCE are required when auth bypass is disabled"
+        });
+      };
+
+export function requireAuth(req, res, next) {
+  return strictAuthMiddleware(req, res, next);
+}
+
+export function maybeBypassAuth(req, _res, next) {
+  if (!bypassEnabled) {
+    return next();
+  }
+
+  // Inject synthetic auth payload so downstream identity resolution remains unchanged.
+  req.auth = {
+    payload: {
+      sub: bypassSubject,
+      vendor_code: bypassVendorCode,
+      lhcode: bypassVendorCode,
+      [vendorClaim]: bypassVendorCode
+    }
+  };
+  return next();
+}
+
+export function isAuthBypassEnabled() {
+  return bypassEnabled;
+}
 
 export function attachVendorCode(req, res, next) {
   try {

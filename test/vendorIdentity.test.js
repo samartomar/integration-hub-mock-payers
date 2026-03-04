@@ -102,19 +102,18 @@ test("JWT vendor overrides conflicting body sourceVendor", async () => {
   assert.equal(req.body.sourceVendorCode, "LH002");
 });
 
-test("JWT vendor map remaps subject-derived identity to lhcode", async () => {
+test("bcpAuth claim is consumed directly as vendor identity", async () => {
   process.env.JWT_ISSUER = "https://integrator-8163795.okta.com/oauth2/default";
   process.env.JWT_AUDIENCE = "api://default";
-  process.env.IDP_VENDOR_CLAIMS = "lhcode,name,sub,entityId";
-  process.env.JWT_VENDOR_MAP =
-    "02.partner@partners.com:LH002,01.partner@partners.com:LH001";
+  process.env.IDP_VENDOR_CLAIMS = "bcpAuth,lhcode,name,sub,entityId";
 
   const { attachVendorCode } = await import(`../src/auth.js?t=${Date.now()}`);
 
   const req = {
     auth: {
       payload: {
-        sub: "02.partner@partners.com"
+        sub: "02.partner@partners.com",
+        bcpAuth: "LH002"
       }
     },
     body: {}
@@ -138,6 +137,7 @@ test("JWT vendor map remaps subject-derived identity to lhcode", async () => {
   assert.equal(req.auth.vendorCode, "LH002");
   assert.equal(req.auth.vendor_code, "LH002");
   assert.equal(req.auth.lhcode, "LH002");
+  assert.equal(req.vendorCode, "LH002");
 });
 
 test("auth bypass injects synthetic JWT identity", async () => {
@@ -157,6 +157,7 @@ test("auth bypass injects synthetic JWT identity", async () => {
   assert.equal(nextCalled, true);
   assert.equal(req.auth.payload.vendor_code, "LH023");
   assert.equal(req.auth.payload.lhcode, "LH023");
+  assert.equal(req.auth.payload.bcpAuth, "LH023");
   assert.equal(req.auth.payload.sub, "bypass|LH023");
   assert.equal(req.auth.payload["https://gosam.info/vendor_code"], "LH023");
 });

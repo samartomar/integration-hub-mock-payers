@@ -1,9 +1,6 @@
 import { auth } from "express-oauth2-jwt-bearer";
 import {
-  applyVendorMap,
-  extractLhcode,
   parseVendorClaimsFromEnv,
-  parseVendorMapFromEnv,
   resolveVendorIdentity
 } from "./auth/vendorIdentity.js";
 
@@ -11,7 +8,6 @@ const issuer = process.env.JWT_ISSUER || process.env.AUTH0_ISSUER;
 const audience = process.env.JWT_AUDIENCE || process.env.AUTH0_AUDIENCE;
 const vendorClaim = process.env.VENDOR_CLAIM || "https://gosam.info/vendor_code";
 const configuredVendorClaims = parseVendorClaimsFromEnv();
-const vendorMap = parseVendorMapFromEnv();
 const bypassEnabled = String(process.env.AUTH_BYPASS_ENABLED || "")
   .trim()
   .toLowerCase() === "true";
@@ -55,6 +51,7 @@ export function maybeBypassAuth(req, _res, next) {
       sub: bypassSubject,
       vendor_code: bypassVendorCode,
       lhcode: bypassVendorCode,
+      bcpAuth: bypassVendorCode,
       [vendorClaim]: bypassVendorCode
     }
   };
@@ -74,14 +71,11 @@ export function attachVendorCode(req, res, next) {
     );
 
     const existingVendorCode = String(
-      claims.vendor_code || claims[vendorClaim] || ""
+      claims.vendor_code || claims.bcpAuth || claims[vendorClaim] || ""
     ).trim();
     const existingLhcode = String(claims.lhcode || "").trim();
-    const unresolvedVendorCode = existingVendorCode || vendorValue;
-    const resolvedVendorCode = applyVendorMap(unresolvedVendorCode, vendorMap);
-    const mappedLhcode = extractLhcode(resolvedVendorCode);
-    const resolvedLhcode =
-      existingLhcode || inferredLhcode || mappedLhcode || resolvedVendorCode;
+    const resolvedVendorCode = existingVendorCode || vendorValue;
+    const resolvedLhcode = existingLhcode || inferredLhcode || resolvedVendorCode;
 
     if (!resolvedVendorCode) {
       return res.status(403).json({

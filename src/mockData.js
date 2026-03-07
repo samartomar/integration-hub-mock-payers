@@ -40,6 +40,16 @@ export function getProviderContractStatusResponse(vendorCode, memberIdWithPrefix
   };
 }
 
+export function getMemberAccumulatorsResponse(memberIdWithPrefix, date) {
+  return {
+    memberIdWithPrefix,
+    name: "Jane Doe",
+    dob: "1990-05-20",
+    dateOfService: date,
+    status: "eligible"
+  };
+}
+
 export function isKnownVendor(vendorCode) {
   return KNOWN_VENDORS.includes(vendorCode);
 }

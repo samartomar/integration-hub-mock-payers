@@ -185,6 +185,42 @@
           ]
         }
       }
+    },
+    {
+      "name": "Get Member Accumulators",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{bearerToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"memberIdWithPrefix\": \"LH001MEMBER1234567890\",\n  \"date\": \"2025-01-15\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/get-member-accumulators",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "get-member-accumulators"
+          ]
+        }
+      }
     }
   ],
   "variable": [

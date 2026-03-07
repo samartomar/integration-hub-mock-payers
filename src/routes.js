@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getCobInquiryResponse,
+  getMemberAccumulatorsResponse,
   getProviderContractStatusResponse,
   getVerifyMemberEligibilityResponse,
   isKnownVendor
@@ -88,6 +89,26 @@ router.post("/api/get-provider-contract-status", (req, res) => {
   return res.json(
     getProviderContractStatusResponse(vendorCode, memberIdWithPrefix)
   );
+});
+
+router.post("/api/get-member-accumulators", (req, res) => {
+  const vendorCode = req.vendorCode;
+  if (!isKnownVendor(vendorCode)) {
+    return res.status(403).json({
+      error: "FORBIDDEN",
+      message: `Vendor ${vendorCode} is not allowed for GET_MEMBER_ACCUMULATORS`
+    });
+  }
+
+  const { memberIdWithPrefix, date } = req.body || {};
+  if (!memberIdWithPrefix || !date) {
+    return res.status(400).json({
+      error: "VALIDATION_ERROR",
+      message: "memberIdWithPrefix and date are required"
+    });
+  }
+
+  return res.json(getMemberAccumulatorsResponse(memberIdWithPrefix, date));
 });
 
 export default router;

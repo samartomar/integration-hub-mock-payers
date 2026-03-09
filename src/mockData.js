@@ -43,10 +43,18 @@ export function getProviderContractStatusResponse(vendorCode, memberIdWithPrefix
 export function getMemberAccumulatorsResponse(memberIdWithPrefix, date) {
   return {
     memberIdWithPrefix,
-    name: "Jane Doe",
-    dob: "1990-05-20",
-    dateOfService: date,
-    status: "eligible"
+    accumulators: [
+      {
+        accumulatorType: "DEDUCTIBLE",
+        accumulatorValue: 500,
+        planYear: String(date).slice(0, 4) || "2025"
+      },
+      {
+        accumulatorType: "OUT_OF_POCKET",
+        accumulatorValue: 200,
+        planYear: String(date).slice(0, 4) || "2025"
+      }
+    ]
   };
 }
 

@@ -1,0 +1,5 @@
+[
+  {"planId": "PLAN001", "planName": "Premier PPO", "coverageType": "PPO", "effectiveDate": "2025-01-01", "terminationDate": null},
+  {"planId": "PLAN002", "planName": "Standard HMO", "coverageType": "HMO", "effectiveDate": "2025-01-01", "terminationDate": null},
+  {"planId": "PLAN003", "planName": "Premium EPO", "coverageType": "EPO", "effectiveDate": "2025-01-01", "terminationDate": null}
+]

@@ -1,0 +1,8 @@
+[
+  {"remittanceId": "REM001", "claimId": "CLM001", "memberIdWithPrefix": "LH001-MEM001", "paymentAmount": 360.00, "paymentDate": "2025-02-05", "checkNumber": "CHK-100001", "status": "PAID", "adjustmentCodes": [{"code": "45", "amount": -90.00}]},
+  {"remittanceId": "REM002", "claimId": "CLM005", "memberIdWithPrefix": "LH001-MEM004", "paymentAmount": 6120.00, "paymentDate": "2025-02-15", "checkNumber": "CHK-100002", "status": "PAID", "adjustmentCodes": [{"code": "45", "amount": -2380.00}]},
+  {"remittanceId": "REM003", "claimId": "CLM006", "memberIdWithPrefix": "LH001-MEM005", "paymentAmount": 148.00, "paymentDate": "2025-02-25", "checkNumber": "CHK-100003", "status": "PAID", "adjustmentCodes": [{"code": "45", "amount": -37.00}]},
+  {"remittanceId": "REM004", "claimId": "CLM007", "memberIdWithPrefix": "LH002-MEM006", "paymentAmount": 256.00, "paymentDate": "2025-01-28", "checkNumber": "CHK-100004", "status": "PAID", "adjustmentCodes": [{"code": "45", "amount": -64.00}]},
+  {"remittanceId": "REM005", "claimId": "CLM010", "memberIdWithPrefix": "LH023-MEM009", "paymentAmount": 88.00, "paymentDate": "2025-02-03", "checkNumber": "CHK-100005", "status": "PAID", "adjustmentCodes": [{"code": "45", "amount": -22.00}]},
+  {"remittanceId": "REM006", "claimId": "CLM011", "memberIdWithPrefix": "LH030-MEM010", "paymentAmount": 156.00, "paymentDate": "2025-02-18", "checkNumber": "CHK-100006", "status": "PAID", "adjustmentCodes": [{"code": "45", "amount": -39.00}]}
+]

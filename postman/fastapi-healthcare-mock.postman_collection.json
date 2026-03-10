@@ -1,0 +1,273 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "FastAPI Healthcare Mock API",
+    "description": "Standards-aligned mock API for U.S. healthcare administrative workflows. X12, FHIR R4, Da Vinci CRD/PAS/Plan-Net. All endpoints require Bearer token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Health check (no auth required)."
+      }
+    },
+    {
+      "name": "Eligibility",
+      "item": [
+        {
+          "name": "Get Verify Member Eligibility",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"memberIdWithPrefix\": \"{{memberIdWithPrefix}}\",\n  \"date\": \"{{date}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-verify-member-eligibility", "host": ["{{baseUrl}}"], "path": ["api", "get-verify-member-eligibility"] },
+            "description": "X12 270/271, FHIR CoverageEligibilityRequest/Response"
+          }
+        },
+        {
+          "name": "Get Service Benefits",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"memberIdWithPrefix\": \"{{memberIdWithPrefix}}\",\n  \"serviceTypeCode\": \"30\",\n  \"procedureCode\": \"99213\",\n  \"date\": \"{{date}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-service-benefits", "host": ["{{baseUrl}}"], "path": ["api", "get-service-benefits"] },
+            "description": "X12 270/271"
+          }
+        },
+        {
+          "name": "Get Member Accumulators",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"memberIdWithPrefix\": \"{{memberIdWithPrefix}}\",\n  \"date\": \"{{date}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-member-accumulators", "host": ["{{baseUrl}}"], "path": ["api", "get-member-accumulators"] },
+            "description": "X12 270/271 benefit balances"
+          }
+        },
+        {
+          "name": "Get COB Inquiry",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"memberIdWithPrefix\": \"{{memberIdWithPrefix}}\",\n  \"serviceDate\": \"{{date}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-cob-inquiry", "host": ["{{baseUrl}}"], "path": ["api", "get-cob-inquiry"] },
+            "description": "X12 270/271 COB"
+          }
+        },
+        {
+          "name": "Get Referral Requirement",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"memberIdWithPrefix\": \"{{memberIdWithPrefix}}\",\n  \"procedureCode\": \"99213\",\n  \"placeOfService\": \"11\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-referral-requirement", "host": ["{{baseUrl}}"], "path": ["api", "get-referral-requirement"] },
+            "description": "X12 270/271, Da Vinci CRD"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Prior Authorization",
+      "item": [
+        {
+          "name": "Get Prior Auth Requirement",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"memberIdWithPrefix\": \"{{memberIdWithPrefix}}\",\n  \"procedureCode\": \"99285\",\n  \"placeOfService\": \"21\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-prior-auth-requirement", "host": ["{{baseUrl}}"], "path": ["api", "get-prior-auth-requirement"] },
+            "description": "X12 278, Da Vinci CRD"
+          }
+        },
+        {
+          "name": "Submit Prior Auth Request",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"memberIdWithPrefix\": \"{{memberIdWithPrefix}}\",\n  \"providerNpi\": \"{{providerNpi}}\",\n  \"procedureCode\": \"99285\",\n  \"diagnosisCode\": \"R07.9\",\n  \"serviceDate\": \"{{date}}\",\n  \"placeOfService\": \"21\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/submit-prior-auth-request", "host": ["{{baseUrl}}"], "path": ["api", "submit-prior-auth-request"] },
+            "description": "X12 278, Da Vinci PAS"
+          }
+        },
+        {
+          "name": "Get Prior Auth Status",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"authorizationId\": \"{{authorizationId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-prior-auth-status", "host": ["{{baseUrl}}"], "path": ["api", "get-prior-auth-status"] },
+            "description": "X12 278, FHIR ClaimResponse"
+          }
+        },
+        {
+          "name": "Get Prior Auth Pend Status",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"authorizationId\": \"AUTH003\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-prior-auth-pend-status", "host": ["{{baseUrl}}"], "path": ["api", "get-prior-auth-pend-status"] },
+            "description": "X12 278 pend follow-up"
+          }
+        },
+        {
+          "name": "Upload Supporting Document Reference",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"authorizationId\": \"{{authorizationId}}\",\n  \"documentUrl\": \"https://example.com/doc.pdf\",\n  \"documentType\": \"CLINICAL_NOTE\",\n  \"description\": \"Clinical notes for prior auth\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/upload-supporting-document-reference", "host": ["{{baseUrl}}"], "path": ["api", "upload-supporting-document-reference"] },
+            "description": "X12 275, FHIR DocumentReference"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Claims",
+      "item": [
+        {
+          "name": "Submit Claim",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"memberIdWithPrefix\": \"{{memberIdWithPrefix}}\",\n  \"providerNpi\": \"{{providerNpi}}\",\n  \"facilityId\": \"FAC001\",\n  \"serviceDate\": \"{{date}}\",\n  \"diagnosisCode\": \"J06.9\",\n  \"procedureCode\": \"99285\",\n  \"placeOfService\": \"21\",\n  \"billedAmount\": 450.00\n}" },
+            "url": { "raw": "{{baseUrl}}/api/submit-claim", "host": ["{{baseUrl}}"], "path": ["api", "submit-claim"] },
+            "description": "X12 837, FHIR Claim"
+          }
+        },
+        {
+          "name": "Get Claim Acknowledgment",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"claimId\": \"{{claimId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-claim-acknowledgment", "host": ["{{baseUrl}}"], "path": ["api", "get-claim-acknowledgment"] },
+            "description": "X12 277"
+          }
+        },
+        {
+          "name": "Get Claim Status",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"claimId\": \"{{claimId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-claim-status", "host": ["{{baseUrl}}"], "path": ["api", "get-claim-status"] },
+            "description": "X12 276/277"
+          }
+        },
+        {
+          "name": "Get Claim Denial Details",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"claimId\": \"CLM003\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-claim-denial-details", "host": ["{{baseUrl}}"], "path": ["api", "get-claim-denial-details"] },
+            "description": "X12 277 adjudication"
+          }
+        },
+        {
+          "name": "Get EOB",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"claimId\": \"{{claimId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-eob", "host": ["{{baseUrl}}"], "path": ["api", "get-eob"] },
+            "description": "X12 835, FHIR ExplanationOfBenefit"
+          }
+        },
+        {
+          "name": "Get Remittance",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"claimId\": \"{{claimId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-remittance", "host": ["{{baseUrl}}"], "path": ["api", "get-remittance"] },
+            "description": "X12 835"
+          }
+        },
+        {
+          "name": "Submit Corrected Claim",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"originalClaimId\": \"{{claimId}}\",\n  \"memberIdWithPrefix\": \"{{memberIdWithPrefix}}\",\n  \"providerNpi\": \"{{providerNpi}}\",\n  \"facilityId\": \"FAC001\",\n  \"serviceDate\": \"{{date}}\",\n  \"diagnosisCode\": \"J06.9\",\n  \"procedureCode\": \"99285\",\n  \"placeOfService\": \"21\",\n  \"billedAmount\": 450.00,\n  \"correctionType\": \"REPLACEMENT\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/submit-corrected-claim", "host": ["{{baseUrl}}"], "path": ["api", "submit-corrected-claim"] },
+            "description": "X12 837 replacement"
+          }
+        },
+        {
+          "name": "Get Medical Records Request Status",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"requestId\": \"{{requestId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-medical-records-request-status", "host": ["{{baseUrl}}"], "path": ["api", "get-medical-records-request-status"] },
+            "description": "X12 277/275, FHIR DocumentReference"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider",
+      "item": [
+        {
+          "name": "Get Provider Contract Status",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"providerNpi\": \"{{providerNpi}}\",\n  \"memberIdWithPrefix\": \"{{memberIdWithPrefix}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-provider-contract-status", "host": ["{{baseUrl}}"], "path": ["api", "get-provider-contract-status"] },
+            "description": "FHIR Plan-Net"
+          }
+        },
+        {
+          "name": "Get Network Directory",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{bearerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"limit\": 50\n}" },
+            "url": { "raw": "{{baseUrl}}/api/get-network-directory", "host": ["{{baseUrl}}"], "path": ["api", "get-network-directory"] },
+            "description": "FHIR Plan-Net"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000" },
+    { "key": "bearerToken", "value": "mock-token-12345" },
+    { "key": "memberIdWithPrefix", "value": "LH001-MEM001" },
+    { "key": "date", "value": "2025-01-15" },
+    { "key": "providerNpi", "value": "1234567890" },
+    { "key": "claimId", "value": "CLM001" },
+    { "key": "authorizationId", "value": "AUTH001" },
+    { "key": "requestId", "value": "REC001" }
+  ]
+}

@@ -1,0 +1,10 @@
+[
+  {"providerNpi": "1234567890", "taxId": "12-3456789", "firstName": "Sarah", "lastName": "Chen", "specialty": "Internal Medicine", "networkStatus": "IN_NETWORK"},
+  {"providerNpi": "9876543210", "taxId": "98-7654321", "firstName": "Michael", "lastName": "Robinson", "specialty": "Emergency Medicine", "networkStatus": "IN_NETWORK"},
+  {"providerNpi": "1122334455", "taxId": "11-2233445", "firstName": "Emily", "lastName": "Garcia", "specialty": "Cardiology", "networkStatus": "IN_NETWORK"},
+  {"providerNpi": "5544332211", "taxId": "55-4433221", "firstName": "James", "lastName": "Lee", "specialty": "Orthopedics", "networkStatus": "IN_NETWORK"},
+  {"providerNpi": "6655443322", "taxId": "66-5544332", "firstName": "Patricia", "lastName": "Clark", "specialty": "Pediatrics", "networkStatus": "IN_NETWORK"},
+  {"providerNpi": "7788990011", "taxId": "77-8899001", "firstName": "Robert", "lastName": "White", "specialty": "Dermatology", "networkStatus": "OUT_OF_NETWORK"},
+  {"providerNpi": "2233445566", "taxId": "22-3344556", "firstName": "Linda", "lastName": "Martinez", "specialty": "Family Medicine", "networkStatus": "IN_NETWORK"},
+  {"providerNpi": "3344556677", "taxId": "33-4455667", "firstName": "William", "lastName": "Harris", "specialty": "Neurology", "networkStatus": "IN_NETWORK"}
+]

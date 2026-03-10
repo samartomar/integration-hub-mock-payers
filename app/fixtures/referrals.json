@@ -1,0 +1,7 @@
+[
+  {"referralId": "REF001", "memberIdWithPrefix": "LH001-MEM001", "referringProviderNpi": "1234567890", "referredToProviderNpi": "1122334455", "specialty": "Cardiology", "procedureCode": "93306", "serviceDate": "2025-02-10", "status": "APPROVED", "effectiveDate": "2025-02-10", "expirationDate": "2025-03-10"},
+  {"referralId": "REF002", "memberIdWithPrefix": "LH001-MEM002", "referringProviderNpi": "1234567890", "referredToProviderNpi": "5544332211", "specialty": "Orthopedics", "procedureCode": "29881", "serviceDate": "2025-01-25", "status": "APPROVED", "effectiveDate": "2025-01-25", "expirationDate": "2025-02-25"},
+  {"referralId": "REF003", "memberIdWithPrefix": "LH001-MEM004", "referringProviderNpi": "2233445566", "referredToProviderNpi": "3344556677", "specialty": "Neurology", "procedureCode": "70551", "serviceDate": "2025-02-14", "status": "PENDED", "pendReason": "Clinical review"},
+  {"referralId": "REF004", "memberIdWithPrefix": "LH002-MEM006", "referringProviderNpi": "1234567890", "referredToProviderNpi": "1122334455", "specialty": "Cardiology", "procedureCode": "93000", "serviceDate": "2025-01-15", "status": "APPROVED", "effectiveDate": "2025-01-15", "expirationDate": "2025-02-15"},
+  {"referralId": "REF005", "memberIdWithPrefix": "LH023-MEM009", "referringProviderNpi": "6655443322", "referredToProviderNpi": "2233445566", "specialty": "Family Medicine", "procedureCode": "99214", "serviceDate": "2025-02-01", "status": "DENIED", "denialReason": "Not medically necessary"}
+]

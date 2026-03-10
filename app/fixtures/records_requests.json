@@ -1,0 +1,7 @@
+[
+  {"requestId": "REC001", "memberIdWithPrefix": "LH001-MEM001", "claimId": "CLM001", "requestedDate": "2025-01-25", "status": "COMPLETED", "completedDate": "2025-01-30"},
+  {"requestId": "REC002", "memberIdWithPrefix": "LH001-MEM004", "claimId": "CLM005", "requestedDate": "2025-02-05", "status": "IN_PROGRESS", "estimatedCompletionDate": "2025-02-20"},
+  {"requestId": "REC003", "memberIdWithPrefix": "LH002-MEM006", "claimId": "CLM007", "requestedDate": "2025-01-20", "status": "COMPLETED", "completedDate": "2025-01-26"},
+  {"requestId": "REC004", "memberIdWithPrefix": "LH001-MEM002", "claimId": "CLM003", "requestedDate": "2025-02-10", "status": "PENDING", "notes": "Awaiting provider response"},
+  {"requestId": "REC005", "memberIdWithPrefix": "LH023-MEM009", "claimId": "CLM010", "requestedDate": "2025-02-01", "status": "COMPLETED", "completedDate": "2025-02-05"}
+]

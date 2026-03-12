@@ -2,9 +2,43 @@
   "info": {
     "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "name": "FastAPI Healthcare Mock API",
-    "description": "Standards-aligned mock API for U.S. healthcare administrative workflows. X12, FHIR R4, Da Vinci CRD/PAS/Plan-Net. All endpoints require Bearer token.",
+    "description": "Standards-aligned mock API for U.S. healthcare administrative workflows. X12, FHIR R4, Da Vinci CRD/PAS/Plan-Net. Use LH001 or LH030 environment for auto Auth0 token fetch.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const get = (k) => pm.environment.get(k) ?? pm.collectionVariables.get(k);",
+          "const tokenUrl = get('auth0TokenUrl');",
+          "if (!tokenUrl) { return; }",
+          "const clientId = get('auth0ClientId');",
+          "const clientSecret = get('auth0ClientSecret');",
+          "const audience = get('auth0Audience') || '';",
+          "if (!clientId || !clientSecret) { console.warn('Auth0: Set auth0ClientId and auth0ClientSecret'); return; }",
+          "const tokenTime = parseInt(get('tokenTime') || '0', 10);",
+          "const now = Math.floor(Date.now() / 1000);",
+          "if (get('bearerToken') && (now - tokenTime) < 3300) { return; }",
+          "const scope = pm.environment.get('auth0TokenUrl') !== undefined ? pm.environment : pm.collectionVariables;",
+          "pm.sendRequest({",
+          "  url: tokenUrl,",
+          "  method: 'POST',",
+          "  header: { 'Content-Type': 'application/json' },",
+          "  body: { mode: 'raw', raw: JSON.stringify({ grant_type: 'client_credentials', client_id: clientId, client_secret: clientSecret, audience: audience }) }",
+          "}, (err, res) => {",
+          "  if (err) { console.error('Auth0 token error:', err); return; }",
+          "  const json = res.json();",
+          "  if (json.access_token) {",
+          "    scope.set('bearerToken', json.access_token);",
+          "    scope.set('tokenTime', now.toString());",
+          "  }",
+          "});"
+        ]
+      }
+    }
+  ],
   "item": [
     {
       "name": "Health",
@@ -261,8 +295,12 @@
     }
   ],
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8000" },
-    { "key": "bearerToken", "value": "mock-token-12345" },
+    { "key": "baseUrl", "value": "https://lh030-api.onrender.com" },
+    { "key": "bearerToken", "value": "" },
+    { "key": "auth0TokenUrl", "value": "https://dev-4tuxv42k7o4csoig.us.auth0.com/oauth/token" },
+    { "key": "auth0ClientId", "value": "" },
+    { "key": "auth0ClientSecret", "value": "" },
+    { "key": "auth0Audience", "value": "https://lh030.api.onrender.com/" },
     { "key": "memberIdWithPrefix", "value": "LH001-MEM001" },
     { "key": "date", "value": "2025-01-15" },
     { "key": "providerNpi", "value": "1234567890" },

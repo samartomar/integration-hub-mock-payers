@@ -33,7 +33,7 @@ def _validate_jwt(token: str) -> dict:
         signing_key.key,
         algorithms=["RS256"],
         audience=settings.auth0_audience or None,
-        issuer=settings.auth0_issuer.rstrip("/") if settings.auth0_issuer else None,
+        issuer=settings.auth0_issuer.strip() if settings.auth0_issuer else None,
         options={
             "verify_exp": True,
             "verify_aud": bool(settings.auth0_audience),

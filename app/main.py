@@ -45,6 +45,23 @@ app.include_router(claims.router)
 app.include_router(provider.router)
 
 
+@app.get("/", tags=["Root"])
+async def root(request: Request):
+    """Root: API info and links. No auth required."""
+    return {
+        "name": settings.api_title,
+        "version": settings.api_version,
+        "status": "ok",
+        "links": {
+            "health": "/health",
+            "healthz": "/healthz",
+            "docs": "/docs",
+            "redoc": "/redoc",
+            "api": "/api",
+        },
+    }
+
+
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     """Return standardized error for HTTP exceptions (e.g., 401)."""
@@ -55,7 +72,7 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
         davinci_alignment=[],
         mock_scenario="auth_required" if exc.status_code == 401 else "error",
     )
-    code = "AUTH_401" if exc.status_code == 401 else "SYSTEM_500"
+    code = "AUTH_401" if exc.status_code == 401 else ("NOT_FOUND_404" if exc.status_code == 404 else "SYSTEM_500")
     err = ErrorResponse(
         success=False,
         message=exc.detail if isinstance(exc.detail, str) else "An error occurred",

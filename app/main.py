@@ -98,8 +98,9 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 @app.get("/health", tags=["Health"])
+@app.get("/healthz", tags=["Health"])
 async def health(request: Request):
-    """Health check. No auth required."""
+    """Health check. No auth required. /healthz for platform probes (K8s, Render)."""
     return {
         "status": "ok",
         "message": "Healthcare Mock API is running",

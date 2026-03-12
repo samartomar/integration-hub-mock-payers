@@ -19,8 +19,8 @@ The collection automatically fetches a JWT from Auth0 before each request when A
 
 | Environment | baseUrl | Auth0 domain |
 |-------------|---------|--------------|
-| LH001 | https://lh001.api.onrender.com | gosam.us.auth0.com |
-| LH030 | https://lh030.api.onrender.com | dev-4tuxv42k7o4csoig.us.auth0.com |
+| LH001 | https://lh001-mock-api.onrender.com | gosam.us.auth0.com |
+| LH030 | https://lh030-api.onrender.com | dev-4tuxv42k7o4csoig.us.auth0.com |
 
 ## Fallback: collection variables only
 

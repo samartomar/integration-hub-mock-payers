@@ -115,7 +115,9 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 
 @app.get("/health", tags=["Health"])
+@app.head("/health", tags=["Health"])
 @app.get("/healthz", tags=["Health"])
+@app.head("/healthz", tags=["Health"])
 async def health(request: Request):
     """Health check. No auth required. /healthz for platform probes (K8s, Render)."""
     return {

@@ -14,6 +14,17 @@ def test_health_no_auth_required():
     assert r.json()["status"] == "ok"
 
 
+def test_health_head_matches_get():
+    """HEAD on /health and /healthz is allowed like GET (empty body per HTTP)."""
+    for path in ("/health", "/healthz"):
+        r_head = client.head(path)
+        r_get = client.get(path)
+        assert r_head.status_code == 200
+        assert r_get.status_code == 200
+        assert r_head.content == b""
+        assert r_get.json()["status"] == "ok"
+
+
 def test_api_requires_bearer_token():
     """API endpoints require Bearer token."""
     r = client.post("/api/get-verify-member-eligibility", json={})
